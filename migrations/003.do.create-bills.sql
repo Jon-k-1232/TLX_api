@@ -16,5 +16,6 @@ CREATE TABLE bills (
     "amountPaid" INTEGER NOT NULL,
     "paidDate" TEXT NOT NULL,
     "status" TEXT NOT NULL,
-    "paidWith" TEXT NULL
+    "paidWith" TEXT NULL,
+    "groupId" INTEGER NOT NULL
 );

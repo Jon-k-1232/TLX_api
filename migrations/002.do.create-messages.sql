@@ -9,5 +9,6 @@ CREATE TABLE messages (
     "fromUserId" INTEGER NOT NULL,
     "subject" TEXT NOT NULL,
     "subjectId" INTEGER NOT NULL,
-    "messageContent" TEXT NOT NULL
+    "messageContent" TEXT NOT NULL,
+    "groupId" INTEGER NOT NULL
 );
