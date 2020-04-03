@@ -5,6 +5,8 @@ const {sanitizeFields} = require('../utils');
 
 contactsRouter
     .route("/:user")
+
+    // Gets all contact info for a user id that is passed in the param
     .get(async (req, res) => {
         let rawUserId = req.params.user;
         const db = req.app.get("db");
@@ -20,12 +22,13 @@ contactsRouter
             );
     })
 
+    // Posts an update to all contact info (except for password) for a user id that is passed in the param
     .post(jsonParser, async (req, res) => {
         let rawUserId = req.params.user;
         const db = req.app.get('db');
-        const { company, street, city, state, zip, email, phone, password, role, managerName, managerId, groupId } = req.body;
+        const { company, street, city, state, zip, email, phone, role, managerName, managerId, groupId } = req.body;
 
-        const updatedContact = sanitizeFields({ company, street, city, state, zip, email, phone, password, role, managerName, managerId, groupId });
+        const updatedContact = sanitizeFields({ company, street, city, state, zip, email, phone, role, managerName, managerId, groupId });
 
         db.insert()
             .from("contact_info")
@@ -36,6 +39,5 @@ contactsRouter
             });
     });
 
-// .post function here
 
 module.exports = contactsRouter;
