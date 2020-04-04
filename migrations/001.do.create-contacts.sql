@@ -11,7 +11,7 @@ CREATE TABLE contact_info (
     "phone" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" TEXT NOT NULL,
-    "managerName" TEXT NOT NULL,
-    "managerId" INTEGER NOT NULL,
+    "managerName" TEXT NULL,
+    "managerId" INTEGER NULL,
     "groupId" INTEGER NOT NULL
 );
