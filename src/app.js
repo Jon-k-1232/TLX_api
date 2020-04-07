@@ -7,9 +7,9 @@ const { NODE_ENV } = require("./config");
 const app = express();
 const billsRouter = require("./bills/bills-router.js");
 const messagesRouter = require("./messages/messages-router.js");
-const contacts = require("./contacts/contacts.js");
-const password = require("./password/password.js");
-const registration = require("./registration/registration.js");
+const contactsRouter = require("./contacts/contacts-router.js");
+const passwordRouter = require("./password/password-router.js");
+const registrationRouter = require("./registration/registration-router.js");
 
 const morganOption = NODE_ENV === "development" ? "tiny" : "common";
 
@@ -23,6 +23,7 @@ app.use(
     origin: "*",
   })
 );
+
 
 /* ///////////////////////////\\\\  KEY VALIDATION  ////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -45,23 +46,16 @@ app.use(function validateBearerToken(req, res, next) {
 app.use("/bills", billsRouter);
 
 // Get whole contact table, post all but password.
-app.use("/contacts", contacts);
+app.use("/contacts", contactsRouter);
 
 // Post updates password only rather than whole contact table
-app.use("/amend", password);
+app.use("/amend", passwordRouter);
 
 // Get all messages for a user, Post messages with user data
 app.use("/messages", messagesRouter);
 
 // Post creates a contact string in contact_info db
-app.use("/registration", registration);
-
-/*
-app.get('/', (req, res) => {
-    res.send('Hello, world!')
-    });
-
- */
+app.use("/registration", registrationRouter);
 
 app.use(errorHandler);
 

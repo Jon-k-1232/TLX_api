@@ -1,12 +1,12 @@
 const express = require("express");
-const contacts = express.Router();
+const contactsRouter = express.Router();
 const jsonParser = express.json();
 const { sanitizeFields } = require("../utils");
 
-contacts
+contactsRouter
   .route("/data/:user")
 
-  // Gets all contact info for a user id that is passed in the param
+    // Gets all contact info along with manager table that matches user
   .get(async (req, res) => {
     let rawUserId = req.params.user;
     const db = req.app.get("db");
@@ -14,11 +14,21 @@ contacts
     db.select()
       .from("contact_info")
       .whereIn("userid", [rawUserId])
-      .then((userContactInfo) =>
-        res.send({
-          userContactInfo,
-          message: 200,
-        })
+      .then((userContactInfo) =>{
+          let managerId = userContactInfo[0].managerId
+
+          db.select()
+              .from("contact_info")
+              .whereIn("userid", [managerId])
+              .then((userManagerInfo) =>
+                  res.send({
+                      userContactInfo,
+                      userManagerInfo,
+                      message: 200,
+                  })
+              )
+          }
+
       );
   })
 
@@ -33,11 +43,7 @@ contacts
       state,
       zip,
       email,
-      phone,
-      role,
-      managerName,
-      managerId,
-      groupId,
+      phone
     } = req.body;
 
     const updatedContact = sanitizeFields({
@@ -47,11 +53,7 @@ contacts
       state,
       zip,
       email,
-      phone,
-      role,
-      managerName,
-      managerId,
-      groupId,
+      phone
     });
 
     db.insert()
@@ -63,4 +65,7 @@ contacts
       });
   });
 
-module.exports = contacts;
+module.exports = contactsRouter;
+
+
+

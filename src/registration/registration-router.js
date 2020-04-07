@@ -1,9 +1,9 @@
 const express = require("express");
-const contacts = express.Router();
+const registrationRouter = express.Router();
 const jsonParser = express.json();
 const { sanitizeFields } = require("../utils");
 
-contacts
+registrationRouter
   .route("/new")
 
   // This sends back a list of mangers for new users to select if they select they are a tenant
@@ -14,9 +14,9 @@ contacts
     db.select()
       .from("contact_info")
       .whereIn("role", [manager])
-      .then((manager_list) =>
+      .then((managerList) =>
         res.send({
-          manager_list,
+          managerList,
           message: 200,
         })
       );
@@ -104,4 +104,4 @@ contacts
     }
   });
 
-module.exports = contacts;
+module.exports = registrationRouter;
