@@ -22,7 +22,7 @@ registrationRouter
       );
   })
 
-    // Creates a new user
+  // Creates a new user
   .post(jsonParser, async (req, res) => {
     const db = req.app.get("db");
     let {
@@ -62,20 +62,18 @@ registrationRouter
     managerName, managerId and groupId will already have a value because the user will be required to select a manger
     from a list on the front end.
      */
-    if (role === 'manager') {
-        // Inserts the new user, mangerId, managerName, and groupId null at this point
+    if (role === "manager") {
+      // Inserts the new user, mangerId, managerName, and groupId null at this point
       db.insert(newUser)
         .returning("*")
         .into("contact_info")
         .then(function () {
-
-            // Finds the newly created row of data based on company name
+          // Finds the newly created row of data based on company name
           db.select()
             .from("contact_info")
             .whereIn("company", [company])
             .then((newInfo) => {
-
-                // This part of the function updates the table values of managerName, managerId, and groupId
+              // This part of the function updates the table values of managerName, managerId, and groupId
               let managerName = newInfo[0].company;
               let managerId = newInfo[0].userid;
               let groupId = newInfo[0].userid;
@@ -88,12 +86,11 @@ registrationRouter
                 .where("company", company)
                 .update(updtdData)
                 .then(function () {
-                  res.send({ message: 200});
+                  res.send({ message: 200 });
                 });
             });
         });
     } else {
-
       // this triggers when the role is set to tenant. All data will be input in the row and attached to the manager
       db.insert(newUser)
         .returning("*")

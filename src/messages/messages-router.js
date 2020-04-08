@@ -6,7 +6,7 @@ const { sanitizeFields } = require("../utils");
 messagesRouter
   .route("/:user")
 
-  // Gets all messages for a given user, sent and received
+  // Gets Inbox messages, get sent messages, and get all messages
   .get(async (req, res) => {
     let rawUserId = req.params.user;
     const db = req.app.get("db");
@@ -14,13 +14,21 @@ messagesRouter
     db.select()
       .from("messages")
       .whereIn("toUserId", [rawUserId])
-      .orWhereIn("fromUserId", [rawUserId])
-      .then((userMessages) =>
-        res.send({
-          userMessages,
-          message: 200,
-        })
-      );
+      .then((inboxMessages) => {
+        db.select()
+          .from("messages")
+          .whereIn("fromUserId", [rawUserId])
+          .then((sentMessages) => {
+            let allMessages = inboxMessages.concat(sentMessages);
+
+            res.send({
+              inboxMessages,
+              sentMessages,
+              allMessages,
+              message: 200,
+            });
+          });
+      });
   })
 
   // Posts a new message

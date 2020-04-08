@@ -6,7 +6,7 @@ const { sanitizeFields } = require("../utils");
 contactsRouter
   .route("/data/:user")
 
-    // Gets all contact info along with manager table that matches user
+  // Gets all contact info along with manager table that matches user
   .get(async (req, res) => {
     let rawUserId = req.params.user;
     const db = req.app.get("db");
@@ -14,37 +14,27 @@ contactsRouter
     db.select()
       .from("contact_info")
       .whereIn("userid", [rawUserId])
-      .then((userContactInfo) =>{
-          let managerId = userContactInfo[0].managerId
+      .then((userContactInfo) => {
+        let managerId = userContactInfo[0].managerId;
 
-          db.select()
-              .from("contact_info")
-              .whereIn("userid", [managerId])
-              .then((userManagerInfo) =>
-                  res.send({
-                      userContactInfo,
-                      userManagerInfo,
-                      message: 200,
-                  })
-              )
-          }
-
-      );
+        db.select()
+          .from("contact_info")
+          .whereIn("userid", [managerId])
+          .then((userManagerInfo) =>
+            res.send({
+              userContactInfo,
+              userManagerInfo,
+              message: 200,
+            })
+          );
+      });
   })
 
   // Posts an update to all contact info (except for password) for a user id that is passed in the param
   .post(jsonParser, async (req, res) => {
     let rawUserId = req.params.user;
     const db = req.app.get("db");
-    const {
-      company,
-      street,
-      city,
-      state,
-      zip,
-      email,
-      phone
-    } = req.body;
+    const { company, street, city, state, zip, email, phone } = req.body;
 
     const updatedContact = sanitizeFields({
       company,
@@ -53,7 +43,7 @@ contactsRouter
       state,
       zip,
       email,
-      phone
+      phone,
     });
 
     db.insert()
@@ -66,6 +56,3 @@ contactsRouter
   });
 
 module.exports = contactsRouter;
-
-
-
