@@ -10,6 +10,7 @@ const messagesRouter = require("./messages/messages-router.js");
 const contactsRouter = require("./contacts/contacts-router.js");
 const passwordRouter = require("./password/password-router.js");
 const registrationRouter = require("./registration/registration-router.js");
+const authRouter = require('./auth/auth-router')
 
 const morganOption = NODE_ENV === "development" ? "tiny" : "common";
 
@@ -24,22 +25,8 @@ app.use(
   })
 );
 
-/* ///////////////////////////\\\\  KEY VALIDATION  ////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-/*
-app.use(function validateBearerToken(req, res, next) {
-    const apiToken = process.env.API_TOKEN2;
-    const authToken = req.get("Authorization");
-
-    if (!authToken || authToken.split(" ")[1] !== apiToken) {
-        return res.status(401).json({ error: "Unauthorized request" });
-    }
-    next();
-});
-
- */
-
-/* ///////////////////////////\\\\  ENDPOINTS  ////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+/* ///////////////////////////\\\\  USER ENDPOINTS  ////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 // Get all bill for a user
 app.use("/bills", billsRouter);
@@ -55,6 +42,9 @@ app.use("/messages", messagesRouter);
 
 // Post creates a contact string in contact_info db
 app.use("/registration", registrationRouter);
+
+// Post call for JWT Auth
+app.use('/auth', authRouter)
 
 app.use(errorHandler);
 
