@@ -13,5 +13,5 @@ CREATE TABLE contact_info (
     "role" TEXT NOT NULL,
     "managerName" TEXT NULL,
     "managerId" INTEGER NULL,
-    "groupId" INTEGER NOT NULL
+    "groupId" INTEGER NULL
 );

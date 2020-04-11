@@ -26,22 +26,15 @@ authRouter.post("/login/", jsonBodyParser, (req, res, next) => {
         dbUser.password
       ).then((compareMatch) => {
         if (!compareMatch) {
-          console.log(compareMatch);
-          //console.log('login User = ' + loginUser.email)
-          //console.log('dbUser = ' + dbUser.email)
-          //console.log('login User = ' + loginUser.password)
-          //console.log('dbUser = ' + dbUser.password)
-
           return res.status(400).json({
             error: "Incorrect password",
           });
         }
 
+        // Returns JWT token and DB info to set front, so front end can then make another call for data
         const sub = dbUser.email;
         const payload = { userid: dbUser.id };
-        res.send({
-          authToken: AuthService.createJwt(sub, payload),
-        });
+        res.send({ dbUser, authToken: AuthService.createJwt(sub, payload) });
       });
     })
     .catch(next);
