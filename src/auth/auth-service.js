@@ -24,6 +24,13 @@ const AuthService = {
   hashPassword(password) {
     return bcrypt.hash(password, 12);
   },
-};
+
+  parseBasicToken(token) {
+    return Buffer
+        .from(token, 'base64')
+        .toString()
+        .split(':')
+  },
+}
 
 module.exports = AuthService;

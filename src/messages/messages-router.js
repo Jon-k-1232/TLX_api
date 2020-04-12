@@ -2,11 +2,12 @@ const express = require("express");
 const messagesRouter = express.Router();
 const jsonParser = express.json();
 const { sanitizeFields } = require("../utils");
+const { requireAuth } = require("../middleware/jwt-auth.js");
 
 messagesRouter
   .route("/:user")
-
   // Gets Inbox messages, get sent messages, and get all messages
+  .all(requireAuth)
   .get(async (req, res) => {
     let rawUserId = req.params.user;
     const db = req.app.get("db");

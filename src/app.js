@@ -10,7 +10,7 @@ const messagesRouter = require("./messages/messages-router.js");
 const contactsRouter = require("./contacts/contacts-router.js");
 const passwordRouter = require("./password/password-router.js");
 const registrationRouter = require("./registration/registration-router.js");
-const authRouter = require('./auth/auth-router')
+const authRouter = require("./auth/auth-router");
 
 const morganOption = NODE_ENV === "development" ? "tiny" : "common";
 
@@ -24,7 +24,6 @@ app.use(
     origin: "*",
   })
 );
-
 
 /* ///////////////////////////\\\\  USER ENDPOINTS  ////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
@@ -44,7 +43,7 @@ app.use("/messages", messagesRouter);
 app.use("/registration", registrationRouter);
 
 // Post call for JWT Auth
-app.use('/auth', authRouter)
+app.use("/auth", authRouter);
 
 app.use(errorHandler);
 

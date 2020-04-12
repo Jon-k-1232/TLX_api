@@ -2,11 +2,13 @@ const express = require("express");
 const contactsRouter = express.Router();
 const jsonParser = express.json();
 const { sanitizeFields } = require("../utils");
+const { requireAuth } = require("../middleware/jwt-auth.js");
 
 contactsRouter
   .route("/data/:user")
 
   // Gets all contact info along with manager table that matches user
+  .all(requireAuth)
   .get(async (req, res) => {
     let rawUserId = req.params.user;
     const db = req.app.get("db");
