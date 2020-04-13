@@ -8,7 +8,6 @@ const app = express();
 const billsRouter = require("./bills/bills-router.js");
 const messagesRouter = require("./messages/messages-router.js");
 const contactsRouter = require("./contacts/contacts-router.js");
-const passwordRouter = require("./password/password-router.js");
 const registrationRouter = require("./registration/registration-router.js");
 const authRouter = require("./auth/auth-router");
 
@@ -32,9 +31,6 @@ app.use("/bills", billsRouter);
 
 // Get whole contact table, post all but password.
 app.use("/contacts", contactsRouter);
-
-// Post updates password only rather than whole contact table
-app.use("/amend", passwordRouter);
 
 // Get all messages for a user, Post messages with user data
 app.use("/messages", messagesRouter);

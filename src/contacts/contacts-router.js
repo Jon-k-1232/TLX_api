@@ -1,8 +1,33 @@
 const express = require("express");
 const contactsRouter = express.Router();
+const authService = require("../auth/auth-service.js");
 const jsonParser = express.json();
 const { sanitizeFields } = require("../utils");
 const { requireAuth } = require("../middleware/jwt-auth.js");
+
+contactsRouter
+
+  // Updates user password
+  .route("/change/:user")
+  .all(requireAuth)
+  .post(jsonParser, async (req, res) => {
+    let rawUserId = req.params.user;
+    const db = req.app.get("db");
+
+    let { password } = req.body;
+
+    // Jwt validation
+    authService.hashPassword(password).then((hashedPassword) => {
+      updatedPassword = { password: hashedPassword };
+      db.insert()
+        .from("contact_info")
+        .where("userid", rawUserId)
+        .update(updatedPassword)
+        .then(function () {
+          res.send({ status: "Password changed successfully", message: 200 });
+        });
+    });
+  });
 
 contactsRouter
   .route("/data/:user")

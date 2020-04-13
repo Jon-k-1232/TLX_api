@@ -87,7 +87,10 @@ registrationRouter
                   .where("company", company)
                   .update(updtdData)
                   .then(function () {
-                    res.send({ message: 200 });
+                    res.send({
+                      status: "Property manager account added successfully",
+                      message: 200,
+                    });
                   });
               });
           });
@@ -97,7 +100,10 @@ registrationRouter
           .returning("*")
           .into("contact_info")
           .then(function () {
-            res.send({ message: 200 });
+            res.send({
+              status: "Tenant account added successfully",
+              message: 200,
+            });
           });
       }
     });
