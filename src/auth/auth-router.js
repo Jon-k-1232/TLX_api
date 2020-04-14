@@ -4,7 +4,7 @@ const AuthService = require("./auth-service");
 const authRouter = express.Router();
 const jsonBodyParser = express.json();
 
-authRouter.post("/login/", jsonBodyParser, (req, res, next) => {
+authRouter.post("/login", jsonBodyParser, (req, res, next) => {
   const { email, password } = req.body;
   const loginUser = { email, password };
 
@@ -34,7 +34,7 @@ authRouter.post("/login/", jsonBodyParser, (req, res, next) => {
         // Returns JWT token and DB info to set front, so front end can then make another call for data
         const sub = dbUser.email;
         const payload = { userid: dbUser.id };
-        res.send({ dbUser, authToken: AuthService.createJwt(sub, payload) });
+        res.send({ dbUser, authToken: AuthService.createJwt(sub, payload), message: 200 });
       });
     })
     .catch(next);

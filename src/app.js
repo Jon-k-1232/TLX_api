@@ -45,7 +45,7 @@ app.use(errorHandler);
 
 /* ///////////////////////////\\\\  ERROR HANDLER  ////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-function errorHandler(error, req, res, next) {
+function errorHandler(error, req, res) {
   let response;
   if (NODE_ENV === "development") {
     response = { error: "server error" };
