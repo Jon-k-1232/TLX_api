@@ -57,7 +57,11 @@ contactsRouter
       });
   })
 
-  // Posts an update to all contact info (except for password) for a user id that is passed in the param
+  /*
+  Posts an update to all contact info (except for password) for a user id that is passed in the param.
+  Returns updated user information along with status 200 so user is aware the update was complete, and
+  user will see updated information.
+   */
   .post(jsonParser, async (req, res) => {
     let rawUserId = req.params.user;
     const db = req.app.get("db");
@@ -78,7 +82,15 @@ contactsRouter
       .where("userid", rawUserId)
       .update(updatedContact)
       .then(function () {
-        res.send({ message: 200 });
+        db.select()
+          .from("contact_info")
+          .whereIn("userid", [rawUserId])
+          .then((userContactInfo) =>
+            res.send({
+              userContactInfo,
+              message: 200,
+            })
+          );
       });
   });
 
