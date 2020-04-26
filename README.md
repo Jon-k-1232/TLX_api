@@ -19,7 +19,8 @@
 ## Description
 
 This app was created to give tenants and property managers a single place to exchange.
-Specifically, tenants and property managers can converse through messages, as well as manage billing.
+Specifically, tenants and property managers can converse through messages, as well as manage billing
+and account information. Communications are saved in the database for record preservation.
 
 ---
 

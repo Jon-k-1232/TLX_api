@@ -4,49 +4,49 @@ const authService = require("../auth/auth-service.js");
 const jsonParser = express.json();
 const { sanitizeFields } = require("../utils");
 const { requireAuth } = require("../middleware/jwt-auth.js");
+const contactService = require("./contacts-service.js");
 
 contactsRouter
 
   // Updates user password
-  .route("/change/:user")
+  .route("/pass/:user")
   .all(requireAuth)
-  .post(jsonParser, async (req, res) => {
-    let rawUserId = req.params.user;
+  .put(jsonParser, async (req, res) => {
+    let userId = req.params.user;
     const db = req.app.get("db");
-
     let { password } = req.body;
 
     // Jwt validation
     authService.hashPassword(password).then((hashedPassword) => {
       updatedPassword = { password: hashedPassword };
-      db.insert()
-        .from("contact_info")
-        .where("userid", rawUserId)
-        .update(updatedPassword)
+
+      contactService
+        .updateUserPassword(db, userId, updatedPassword)
+
         .then(function () {
-          res.send({ status: "Password changed successfully", message: 200 });
+          res.send({ status: 200, message: "Password changed successfully." });
         });
     });
   });
 
 contactsRouter
-  .route("/data/:user")
+  .route("/:user")
 
   // Gets all contact info along with manager table that matches user
   .all(requireAuth)
   .get(async (req, res) => {
-    let rawUserId = req.params.user;
+    let userId = req.params.user;
     const db = req.app.get("db");
 
-    db.select()
-      .from("contact_info")
-      .whereIn("userid", [rawUserId])
+    contactService
+      .getContactInfo(db, userId)
+
       .then((userContactInfo) => {
         let managerId = userContactInfo[0].managerId;
 
-        db.select()
-          .from("contact_info")
-          .whereIn("userid", [managerId])
+        contactService
+          .getManagerInfo(db, managerId)
+
           .then((userManagerInfo) =>
             res.send({
               userContactInfo,
@@ -58,12 +58,12 @@ contactsRouter
   })
 
   /*
-  Posts an update to all contact info (except for password) for a user id that is passed in the param.
+  Updates all contact info (except for password) for a user id that is passed in the param.
   Returns updated user information along with status 200 so user is aware the update was complete, and
   user will see updated information.
    */
-  .post(jsonParser, async (req, res) => {
-    let rawUserId = req.params.user;
+  .put(jsonParser, async (req, res) => {
+    let userId = req.params.user;
     const db = req.app.get("db");
     const { company, street, city, state, zip, email, phone } = req.body;
 
@@ -77,20 +77,17 @@ contactsRouter
       phone,
     });
 
-    db.insert()
-      .from("contact_info")
-      .where("userid", rawUserId)
-      .update(updatedContact)
+    contactService
+      .updateContactInfo(db, userId, updatedContact)
+
       .then(function () {
-        db.select()
-          .from("contact_info")
-          .whereIn("userid", [rawUserId])
-          .then((userContactInfo) =>
-            res.send({
-              userContactInfo,
-              message: 200,
-            })
-          );
+        contactService.getContactInfo(db, userId).then((userContactInfo) =>
+          res.send({
+            userContactInfo,
+            status: 200,
+              message: "Contact information updated successfully."
+          })
+        );
       });
   });
 

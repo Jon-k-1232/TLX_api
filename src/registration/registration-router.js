@@ -2,6 +2,7 @@ const express = require("express");
 const registrationRouter = express.Router();
 const jsonParser = express.json();
 const authService = require("../auth/auth-service");
+const registrationService = require("./registration-service.js");
 
 registrationRouter
   .route("/new")
@@ -11,13 +12,13 @@ registrationRouter
     const db = req.app.get("db");
     const manager = "manager";
 
-    db.select()
-      .from("contact_info")
-      .whereIn("role", [manager])
+    registrationService
+      .getManagers(db, manager)
+
       .then((managerList) =>
         res.send({
           managerList,
-          message: 200,
+          status: 200,
         })
       );
   })
@@ -65,46 +66,36 @@ registrationRouter
       */
       if (role === "manager") {
         // Inserts the new user, mangerId, managerName, and groupId null at this point
-        db.insert(newUser)
-          .returning("*")
-          .into("contact_info")
-          .then(function () {
-            // Finds the newly created row of data based on company name
-            db.select()
-              .from("contact_info")
-              .whereIn("company", [company])
-              .then((newInfo) => {
-                // This part of the function updates the table values of managerName, managerId, and groupId
-                let managerName = newInfo[0].company;
-                let managerId = newInfo[0].userid;
-                let groupId = newInfo[0].userid;
 
-                updtdData = { managerName, managerId, groupId };
+        registrationService.insertNewUser(db, newUser).then(function () {
+          // Finds the newly created row of data based on company name
+          registrationService.getCompanyName(db, company).then((newInfo) => {
+            // This part of the function updates the table values of managerName, managerId, and groupId
+            let managerName = newInfo[0].company;
+            let managerId = newInfo[0].userid;
+            let groupId = newInfo[0].userid;
 
-                // Inserts values into table
-                db.insert()
-                  .from("contact_info")
-                  .where("company", company)
-                  .update(updtdData)
-                  .then(function () {
-                    res.send({
-                      status: "Property manager account added successfully",
-                      message: 200,
-                    });
-                  });
+            updtdData = { managerName, managerId, groupId };
+
+            // Inserts values into table
+            registrationService
+              .insertManagerIndicator(db, company)
+              .then(function () {
+                res.send({
+                  status: 200,
+                  message: "Property manager account added successfully",
+                });
               });
           });
+        });
       } else {
         // this triggers when the role is set to tenant. All data will be input in the row and attached to the manager
-        db.insert(newUser)
-          .returning("*")
-          .into("contact_info")
-          .then(function () {
-            res.send({
-              status: "Tenant account added successfully",
-              message: 200,
-            });
+        registrationService.insertNewUser(db, newUser).then(function () {
+          res.send({
+            status: 200,
+            message: "Tenant account added successfully",
           });
+        });
       }
     });
   });
