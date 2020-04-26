@@ -45,14 +45,14 @@ app.use(errorHandler);
 
 /* ///////////////////////////\\\\  ERROR HANDLER  ////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-function errorHandler(error, req, res) {
+function errorHandler(error, req, res, next) {
   let response;
-  if (NODE_ENV === "development") {
+  if (NODE_ENV !== "development") {
     response = { error: "server error" };
   } else {
-    console.error(error);
-    response = { message: error.message, error };
+    response = { message: error.message };
   }
+  console.error(error.message);
   res.status(500).json(response);
 }
 

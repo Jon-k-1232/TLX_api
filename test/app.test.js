@@ -168,7 +168,7 @@ describe("Express App", () => {
     it("should return a message from GET all contact info/", (done) => {
       chai
         .request(app)
-        .get("/contacts/data/2")
+        .get("/contacts/2")
         .set("authorization", `bearer ${authToken}`)
         .end((err, res) => {
           res.should.have.status(200);
@@ -192,7 +192,7 @@ describe("Express App", () => {
 
       chai
         .request(app)
-        .post("/contacts/data/2")
+        .put("/contacts/2")
         .set("authorization", `bearer ${authToken}`)
         .send(fakeUpdate)
         .end((err, res) => {
@@ -202,7 +202,7 @@ describe("Express App", () => {
         });
     });
 
-    // Tests Post for updating only the password
+    // Tests Put for updating only the password
     it("should return a 200 status message from POST updating password /", () => {
       let fakePassword = {
         password: "testChange",
@@ -210,14 +210,15 @@ describe("Express App", () => {
 
       chai
         .request(app)
-        .post("/contacts/change/2")
+        .put("/contacts/pass/2")
         .set("authorization", `bearer ${authToken}`)
         .send(fakePassword)
-        .end((err, res) => {
+        .then((res) => {
           res.should.have.status(200);
           should.exist(res.body);
           res.body.should.be.a("object");
-        });
+        })
+        .catch((err) => console.error(err));
     });
   });
 });

@@ -31,7 +31,7 @@ authRouter.post("/login", jsonBodyParser, (req, res, next) => {
           });
         }
 
-        // Returns JWT token and DB info to set front, so front end can then make another call for data
+        // Returns JWT token and user info to set front, so front end can then make another call for data
         const sub = dbUser.email;
         const payload = { userid: dbUser.id };
         res.send({

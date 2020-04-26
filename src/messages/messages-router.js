@@ -21,7 +21,7 @@ messagesRouter
           inboxMessages,
           sentMessages,
           allMessages,
-          message: 200,
+          status: 200,
         });
       });
     });
@@ -58,7 +58,7 @@ messagesRouter
       .insertMessage(db, newMessage)
 
       .then(function () {
-        res.send({ message: "Message sent successfully.", status:200 });
+        res.send({ message: "Message sent successfully.", status: 200 });
       });
   });
 

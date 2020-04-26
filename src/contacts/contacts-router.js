@@ -38,12 +38,14 @@ contactsRouter
     let userId = req.params.user;
     const db = req.app.get("db");
 
+    // Gets contact info for user
     contactService
       .getContactInfo(db, userId)
 
       .then((userContactInfo) => {
         let managerId = userContactInfo[0].managerId;
 
+        // Gets manager info for user
         contactService
           .getManagerInfo(db, managerId)
 
@@ -51,7 +53,7 @@ contactsRouter
             res.send({
               userContactInfo,
               userManagerInfo,
-              message: 200,
+              status: 200,
             })
           );
       });
@@ -85,7 +87,7 @@ contactsRouter
           res.send({
             userContactInfo,
             status: 200,
-              message: "Contact information updated successfully."
+            message: "Contact information updated successfully.",
           })
         );
       });

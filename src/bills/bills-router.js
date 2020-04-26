@@ -10,6 +10,7 @@ billsRouter
     let userId = req.params.user;
     const db = req.app.get("db");
 
+    // Calls to find all bills for user.
     billsService
       .getBillsByUserId(db, userId)
 
