@@ -18,7 +18,7 @@ contactsRouter
       res.send({
         status: 200,
         message:
-          "Sorry, For demonstration purposes you are unable to update the user password" +
+          "Sorry, for demonstration purposes you are unable to update the user password" +
           " on this account. For non-demonstration accounts the user password will be updated.",
       });
     } else {
@@ -84,7 +84,7 @@ contactsRouter
       res.send({
         status: 200,
         message:
-          "Sorry, For demonstration purposes you are unable to update user information on" +
+          "Sorry, for demonstration purposes you are unable to update user information on" +
           " this account. For non-demonstration accounts user information will be updated.",
       });
     } else {
