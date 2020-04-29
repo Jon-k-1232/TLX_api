@@ -13,20 +13,33 @@ contactsRouter
   .all(requireAuth)
   .put(jsonParser, async (req, res) => {
     let userId = req.params.user;
-    const db = req.app.get("db");
-    let { password } = req.body;
 
-    // Jwt validation
-    authService.hashPassword(password).then((hashedPassword) => {
-      updatedPassword = { password: hashedPassword };
+    if (userId === "2") {
+      res.send({
+        status: 200,
+        message:
+          "Sorry, For demonstration purposes you are unable to update the user password" +
+          " on this account. For non-demonstration accounts the user password will be updated.",
+      });
+    } else {
+      const db = req.app.get("db");
+      let { password } = req.body;
 
-      contactService
-        .updateUserPassword(db, userId, updatedPassword)
+      // Jwt validation
+      authService.hashPassword(password).then((hashedPassword) => {
+        updatedPassword = { password: hashedPassword };
 
-        .then(function () {
-          res.send({ status: 200, message: "Password changed successfully." });
-        });
-    });
+        contactService
+          .updateUserPassword(db, userId, updatedPassword)
+
+          .then(function () {
+            res.send({
+              status: 200,
+              message: "Password changed successfully.",
+            });
+          });
+      });
+    }
   });
 
 contactsRouter
@@ -66,31 +79,41 @@ contactsRouter
    */
   .put(jsonParser, async (req, res) => {
     let userId = req.params.user;
-    const db = req.app.get("db");
-    const { company, street, city, state, zip, email, phone } = req.body;
 
-    const updatedContact = sanitizeFields({
-      company,
-      street,
-      city,
-      state,
-      zip,
-      email,
-      phone,
-    });
-
-    contactService
-      .updateContactInfo(db, userId, updatedContact)
-
-      .then(function () {
-        contactService.getContactInfo(db, userId).then((userContactInfo) =>
-          res.send({
-            userContactInfo,
-            status: 200,
-            message: "Contact information updated successfully.",
-          })
-        );
+    if (userId === "2") {
+      res.send({
+        status: 200,
+        message:
+          "Sorry, For demonstration purposes you are unable to update user information on" +
+          " this account. For non-demonstration accounts user information will be updated.",
       });
+    } else {
+      const db = req.app.get("db");
+      const { company, street, city, state, zip, email, phone } = req.body;
+
+      const updatedContact = sanitizeFields({
+        company,
+        street,
+        city,
+        state,
+        zip,
+        email,
+        phone,
+      });
+
+      contactService
+        .updateContactInfo(db, userId, updatedContact)
+
+        .then(function () {
+          contactService.getContactInfo(db, userId).then((userContactInfo) =>
+            res.send({
+              userContactInfo,
+              status: 200,
+              message: "Contact information updated successfully.",
+            })
+          );
+        });
+    }
   });
 
 module.exports = contactsRouter;
