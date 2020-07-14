@@ -10,6 +10,7 @@ const messagesRouter = require("./messages/messages-router.js");
 const contactsRouter = require("./contacts/contacts-router.js");
 const registrationRouter = require("./registration/registration-router.js");
 const authRouter = require("./auth/auth-router");
+const alertsRouter = require("./alerts/alerts-router");
 
 const morganOption = NODE_ENV === "development" ? "tiny" : "common";
 
@@ -40,6 +41,9 @@ app.use("/registration", registrationRouter);
 
 // Post call for JWT Auth
 app.use("/auth", authRouter);
+
+// Post a new alert for a group
+app.use("/alerts", alertsRouter);
 
 app.use(errorHandler);
 
